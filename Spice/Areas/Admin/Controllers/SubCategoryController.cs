@@ -82,7 +82,7 @@ namespace Spice.Areas.Admin.Controllers
         {
             List<SubCategory> subCategories = new List<SubCategory>();
             subCategories = await (from subCategory in this.db.SubCategory
-                             where subCategory.Category.Id == id
+                             where subCategory.CategoryId == id
                              select subCategory).ToListAsync();
 
             return Json(new SelectList(subCategories, "Id", "Name"));
