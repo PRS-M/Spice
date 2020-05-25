@@ -149,5 +149,22 @@ namespace Spice.Areas.Admin.Controllers
             //modelVM.SubCategory.Id = id;
             return View(modelVM);
         }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var subCategory = await this.db.SubCategory.Include(s => s.Category).SingleOrDefaultAsync(s => s.Id == id);
+
+            if (subCategory == null)
+            {
+                return NotFound();
+            }
+
+            return View(subCategory);
+        }
     }
 }
