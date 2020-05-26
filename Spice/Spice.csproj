@@ -5,6 +5,11 @@
     <UserSecretsId>aspnet-Spice-1691AC52-22D8-4BB7-95A9-C2E5DACAE52E</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20200526175349_AddMenuItem.cs" />
+    <Compile Remove="Data\Migrations\20200526175349_AddMenuItem.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
