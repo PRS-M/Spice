@@ -51,7 +51,7 @@ namespace Spice.Areas.Admin.Controllers
         {
             MenuItemVM.MenuItem.SubCategoryId = Convert.ToInt32(Request.Form["SubCategoryId"]); //.ToString()
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(MenuItemVM);
             }
@@ -91,6 +91,24 @@ namespace Spice.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET - DETAILS
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            MenuItemVM.MenuItem = await this.db.MenuItem.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id);
+
+            if (MenuItemVM.MenuItem == null)
+            {
+                return NotFound();
+            }
+
+            return View(MenuItemVM);
+        }
+
         // GET - EDIT
         public async Task<IActionResult> Edit(int? id)
         {
@@ -102,7 +120,7 @@ namespace Spice.Areas.Admin.Controllers
             MenuItemVM.MenuItem = await this.db.MenuItem.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id);
             MenuItemVM.SubCategory = await this.db.SubCategory.Where(s => s.CategoryId == MenuItemVM.MenuItem.CategoryId).ToListAsync();
 
-            if(MenuItemVM.MenuItem == null)
+            if (MenuItemVM.MenuItem == null)
             {
                 return NotFound();
             }
@@ -164,6 +182,48 @@ namespace Spice.Areas.Admin.Controllers
             menuItemFromDb.SubCategoryId = MenuItemVM.MenuItem.SubCategoryId;
 
             await this.db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET - DELETE
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            MenuItemVM.MenuItem = await this.db.MenuItem.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(m => m.Id == id);
+
+            if (MenuItemVM.MenuItem == null)
+            {
+                return NotFound();
+            }
+
+            return View(MenuItemVM);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            string webRootPath = hostEnvironment.WebRootPath;
+            var menuItemFromDb = await this.db.MenuItem.FindAsync(id);
+
+            if (menuItemFromDb != null)
+            {
+                // Delete original file
+                var imgPath = Path.Combine(webRootPath, menuItemFromDb.Image.TrimStart('\\'));
+
+                if (System.IO.File.Exists(imgPath))
+                {
+                    System.IO.File.Delete(imgPath);
+                }
+
+                this.db.MenuItem.Remove(menuItemFromDb);
+                await this.db.SaveChangesAsync();
+            }
+
             return RedirectToAction(nameof(Index));
         }
     }
