@@ -22,5 +22,10 @@ namespace Spice.Areas.Admin.Controllers
         {
             return View(await this.db.Coupon.ToListAsync());
         }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }
