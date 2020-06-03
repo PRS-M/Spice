@@ -62,5 +62,22 @@ namespace Spice.Areas.Admin.Controllers
                 return View(coupon);
             }
         }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var coupon = await this.db.Coupon.FindAsync(id);
+
+            if (coupon == null)
+            {
+                return NotFound();
+            }
+
+            return View(coupon);
+        }
     }
 }
