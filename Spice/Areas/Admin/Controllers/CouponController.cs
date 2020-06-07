@@ -138,5 +138,38 @@ namespace Spice.Areas.Admin.Controllers
 
             return View(coupon);
         }
+        
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var coupon = await this.db.Coupon.FindAsync(id);
+
+            if (coupon == null)
+            {
+                return NotFound();
+            }
+
+            return View(coupon);
+        }
+        
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var coupon = await this.db.Coupon.FindAsync(id);
+
+            if (coupon == null)
+            {
+                return View();
+            }
+
+            this.db.Coupon.Remove(coupon);
+            await this.db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
