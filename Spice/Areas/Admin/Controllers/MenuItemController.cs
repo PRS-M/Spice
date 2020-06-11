@@ -177,7 +177,7 @@ namespace Spice.Areas.Admin.Controllers
             menuItemFromDb.Name = MenuItemVM.MenuItem.Name;
             menuItemFromDb.Description = MenuItemVM.MenuItem.Description;
             menuItemFromDb.Price = MenuItemVM.MenuItem.Price;
-            menuItemFromDb.Spicyness = MenuItemVM.MenuItem.Spicyness;
+            menuItemFromDb.Spiciness = MenuItemVM.MenuItem.Spiciness;
             menuItemFromDb.CategoryId = MenuItemVM.MenuItem.CategoryId;
             menuItemFromDb.SubCategoryId = MenuItemVM.MenuItem.SubCategoryId;
 
