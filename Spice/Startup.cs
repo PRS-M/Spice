@@ -32,7 +32,8 @@ namespace Spice
                     Configuration.GetConnectionString("DefaultConnection")));
 
             // Identity Options commented out in order to avoid the need of e-mail confirmation
-            services.AddDefaultIdentity<IdentityUser>(/*options => options.SignIn.RequireConfirmedAccount = true*/)
+            services.AddIdentity<IdentityUser, IdentityRole>(/*options => options.SignIn.RequireConfirmedAccount = true*/)
+                .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
