@@ -1,4 +1,5 @@
 ﻿@page
+@using Spice.Utility 
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
@@ -92,6 +93,20 @@
             </div>
             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
         </div>
+
+        @if (User.IsInRole(StaticDetails.ManagerUser))
+        {
+            <div class="form-group row">
+                <div class="col-2">
+                </div>
+                <div class="col-5">
+                    <input type="radio" name="rdUserRole" value="@StaticDetails.KitchenUser" checked /> @StaticDetails.KitchenUser
+                    <input type="radio" name="rdUserRole" value="@StaticDetails.FrontDeskUser" /> @StaticDetails.FrontDeskUser
+                    <input type="radio" name="rdUserRole" value="@StaticDetails.ManagerUser" /> @StaticDetails.ManagerUser
+                </div>
+            </div>
+        }
+
         <div class="form-group row">
             <div class="col-5 offset-2">
                 <button type="submit" class="btn btn-primary form-control">Register</button>
