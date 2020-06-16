@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -49,6 +51,52 @@ namespace Spice.Controllers
             };
 
             return View(shoppingCart);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Details(ShoppingCart shoppingCart)
+        {
+            shoppingCart.Id = 0;
+            if (ModelState.IsValid)
+            {
+                var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                shoppingCart.ApplicationUserId = claim.Value;
+
+                ShoppingCart cartFromDb = await db.ShoppingCart
+                    .Where(sc => sc.ApplicationUserId == shoppingCart.ApplicationUserId && sc.MenuItemId == shoppingCart.MenuItemId)
+                    .FirstOrDefaultAsync();
+
+                if (cartFromDb == null)
+                {
+                    await db.AddAsync(shoppingCart);
+                }
+                else
+                {
+                    cartFromDb.Count = cartFromDb.Count + shoppingCart.Count;
+                }
+
+                await db.SaveChangesAsync();
+
+                var count = db.ShoppingCart.Where(sc => sc.ApplicationUserId == shoppingCart.ApplicationUserId).Count();
+                HttpContext.Session.SetInt32("sessionCartCounter", count);
+
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                var menuItemFromDb = await db.MenuItem.Include(mi => mi.Category).Include(mi => mi.SubCategory).FirstOrDefaultAsync(mi => mi.Id == shoppingCart.Id);
+
+                ShoppingCart shoppingCartObj = new ShoppingCart()
+                {
+                    MenuItem = menuItemFromDb,
+                    MenuItemId = menuItemFromDb.Id,
+                };
+
+                return View(shoppingCartObj);
+            }
         }
 
         public IActionResult Privacy()
