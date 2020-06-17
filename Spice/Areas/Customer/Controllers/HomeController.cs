@@ -36,6 +36,15 @@ namespace Spice.Controllers
                 Coupon = await this.db.Coupon.Where(c => c.IsActive).ToListAsync()
             };
 
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (claim != null)
+            {
+                var count = db.ShoppingCart.Count(sc => sc.ApplicationUserId == claim.Value);
+                HttpContext.Session.SetInt32("sessionCartCount", count);
+            }
+
             return View(indexVM);
         }
 
