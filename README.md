@@ -8,7 +8,7 @@ Restaurant Website - ASP.NET MVC Core 3, EF Core, Udemy Course
 
 ## General Info
 A restaurant website created with ASP.NET MVC Core. Just a CRUD app coded along with the course.  
-Not much, just enough to notice and acknowledge the differences between .NET and .NET Core.
+Not much, just enough to notice and acknowledge the differences between .NET and .NET Core.  
 I think I will refactor the whole project so my eyes stop hurting, especially the naming conventions.
 
 ## Technologies
