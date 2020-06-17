@@ -91,7 +91,7 @@ namespace Spice.Controllers
                 await db.SaveChangesAsync();
 
                 var count = db.ShoppingCart.Where(sc => sc.ApplicationUserId == shoppingCart.ApplicationUserId).Count();
-                HttpContext.Session.SetInt32("sessionCartCounter", count);
+                HttpContext.Session.SetInt32(StaticDetails.sessionCartCount, count);
 
                 return RedirectToAction(nameof(Index));
             }
