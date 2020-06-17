@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Spice.Data;
 using Spice.Models;
 using Spice.Models.ViewModels;
+using Spice.Utility;
 
 namespace Spice.Controllers
 {
@@ -42,7 +43,7 @@ namespace Spice.Controllers
             if (claim != null)
             {
                 var count = db.ShoppingCart.Count(sc => sc.ApplicationUserId == claim.Value);
-                HttpContext.Session.SetInt32("sessionCartCount", count);
+                HttpContext.Session.SetInt32(StaticDetails.sessionCartCount, count);
             }
 
             return View(indexVM);
